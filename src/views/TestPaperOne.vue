@@ -2,7 +2,7 @@
   <div class="test-paper-one base-box">
     <div class="left">
       <div>
-        <div>几以内</div>
+        <div class="parameter-name">几以内</div>
         <a-select v-model="max" class="select-one">
           <a-select-option value="10">10</a-select-option>
           <a-select-option value="100">100</a-select-option>
@@ -10,11 +10,11 @@
         </a-select>
       </div>
       <div>
-        <div>运算类型</div>
+        <div class="parameter-name">运算类型</div>
         <a-select mode="multiple" v-model="ttypeValue" :options="ttype" class="select-one"></a-select>
       </div>
       <div>
-        <div>连加连减</div>
+        <div class="parameter-name">连加连减</div>
         <a-select v-model="multipleValue" :options="multiple" class="select-one"></a-select>
       </div>
       <div class="btn-div">
@@ -341,6 +341,10 @@ export default class TestPaperOne extends Vue {
     margin-top: 16px;
     border: 1px solid #666666;
     width: 230px;
+
+    .parameter-name {
+      margin-bottom: 6px;
+    }
 
     .btn-div {
       text-align: center;
