@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: "/coco",
+  publicPath: process.env.NODE_ENV === "production" ? "/coco" : "/",
   css: {
     loaderOptions: {
       less: {

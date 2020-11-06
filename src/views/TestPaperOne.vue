@@ -1,46 +1,80 @@
 <template>
   <div class="test-paper-one base-box">
-    <div class="header">
-      <div class="title-1">一年级口算比赛练习</div>
-      <div class="title-2">
-        <div>
-          <span>班级</span>
-          <span class="line"></span>
-        </div>
-        <div>
-          <span>姓名</span>
-          <span class="line"></span>
-        </div>
-        <div>
-          <span>得分</span>
-          <span class="line"></span>
-        </div>
+    <div class="left">
+      <div>
+        <div>几以内</div>
+        <a-select v-model="max" class="select-one">
+          <a-select-option value="10">10</a-select-option>
+          <a-select-option value="100">100</a-select-option>
+          <a-select-option value="1000">1000</a-select-option>
+        </a-select>
+      </div>
+      <div>
+        <div>运算类型</div>
+        <a-select mode="multiple" v-model="ttypeValue" :options="ttype" class="select-one"></a-select>
+      </div>
+      <div>
+        <div>连加连减</div>
+        <a-select v-model="multipleValue" :options="multiple" class="select-one"></a-select>
+      </div>
+      <div class="btn-div">
+        <a-button type="primary" @click="createSubject">生成</a-button>
       </div>
     </div>
-    <div class="left"></div>
     <div class="right">
+      <div class="header">
+        <div class="title-1">一年级口算比赛练习</div>
+        <div class="title-2">
+          <div>
+            <span>班级</span>
+            <span class="line"></span>
+          </div>
+          <div>
+            <span>姓名</span>
+            <span class="line"></span>
+          </div>
+          <div>
+            <span>得分</span>
+            <span class="line"></span>
+          </div>
+        </div>
+      </div>
       <div class="paper">
-        <!-- <div v-for="(item, key) in subjectOneList" :key="key" v-html="item"></div> -->
+        <div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key <= 23" class="item" :key="key" v-html="item"></div>
+          </template>
+        </div>
 
         <div>
-          <div class="item" v-for="i in 24" :key="i" v-html="subjectOne()"></div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key > 23 && key <= 47" class="item" :key="key" v-html="item"></div>
+          </template>
         </div>
+
         <div>
-          <div class="item" v-for="i in 24" :key="i" v-html="subjectOne()"></div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key > 47 && key <= 71" class="item" :key="key" v-html="item"></div>
+          </template>
         </div>
+
         <div>
-          <div class="item" v-for="i in 24" :key="i" v-html="subjectOne()"></div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key > 71 && key <= 95" class="item" :key="key" v-html="item"></div>
+          </template>
         </div>
+
         <div>
-          <div class="item" v-for="i in 24" :key="i" v-html="subjectOne()"></div>
-        </div>
-        <div>
-          <div class="item" v-for="i in 10" :key="i" v-html="subjectOne()"></div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key > 95 && key <= 105" class="item" :key="key" v-html="item"></div>
+          </template>
           <div class="item">
             <span class="iconfont icon-yuanquanweixuanfuben"></span>
             填&#62;、&#60;、&#61;
           </div>
-          <div class="item" v-for="i in 13" :key="i" v-html="subjectTwo()"></div>
+          <template v-for="(item, key) in subjectList">
+            <div v-if="key > 105 && key <= 119" class="item" :key="key" v-html="item"></div>
+          </template>
         </div>
       </div>
     </div>
@@ -49,15 +83,20 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { Select } from "ant-design-vue";
+import { Select, Input, Button, Radio } from "ant-design-vue";
 import AdditionAndSubtraction from "@/components/AdditionAndSubtraction.vue";
+// import { RadioGroup } from "ant-design-vue/types/radio/radio-group";
 
 @Component({
   name: "TestPaperOne",
   components: {
     ASelect: Select,
     ASelectOption: Select.Option,
-    AdditionAndSubtraction: AdditionAndSubtraction
+    AdditionAndSubtraction: AdditionAndSubtraction,
+    AInput: Input,
+    AButton: Button,
+    ARadio: Radio,
+    ARadioGroup: Radio.Group
   }
 })
 export default class TestPaperOne extends Vue {
@@ -70,14 +109,29 @@ export default class TestPaperOne extends Vue {
   private type = ["+", "-", "+-"];
 
   // 加减运算
-  private subjectOneList: string[] = [];
+  private subjectList: string[] = [];
 
   // 几以内的运算
   private max = 10;
 
+  private ttype = [
+    { label: "加法", value: "+" },
+    { label: "减法", value: "-" }
+  ];
+  private ttypeValue: string[] = ["+", "-"];
+
+  /**
+   * 是否有连加连减
+   */
+  private multiple = [
+    { label: "没有", value: 0 },
+    { label: "有", value: 1 },
+    { label: "全部", value: 2 }
+  ];
+  private multipleValue = 1;
+
   created() {
-    // this.generate();
-    this.subjectOne();
+    this.createSubject();
   }
 
   /**
@@ -108,8 +162,6 @@ export default class TestPaperOne extends Vue {
       equation: equation,
       anwser: anwser
     };
-    // console.log("+++++++++++");
-    // console.log(formula);
     return formula;
   }
 
@@ -145,8 +197,6 @@ export default class TestPaperOne extends Vue {
       equation: equation,
       anwser: anwser
     };
-    // console.log("---------");
-    // console.log(formula);
     return formula;
   }
 
@@ -154,13 +204,20 @@ export default class TestPaperOne extends Vue {
    * 加减混合运算
    */
   mixedComputing() {
-    // 第一个运算符
-    const operatorA = this.type[this.$utils.random(0, 1)];
-    const a = operatorA === "+" ? this.addition() : this.subtraction();
+    let a: any, b: any;
 
-    // 第二个运算符
-    const operatorB = this.type[this.$utils.random(0, 1)];
-    const b = operatorB === "+" ? this.addition(a.result) : this.subtraction(a.result);
+    if (this.ttypeValue.length === 1) {
+      if (this.ttypeValue.find(item => item === "+")) {
+        a = this.addition();
+        b = this.addition(a.result);
+      } else {
+        a = this.subtraction();
+        b = this.subtraction(a.result);
+      }
+    } else {
+      a = this.isAdditionSubject() ? this.addition() : this.subtraction();
+      b = this.isAdditionSubject() ? this.addition(a.result) : this.subtraction(a.result);
+    }
 
     const _formula = Array.from(b.formula);
     _formula.splice(0, 1, ...a.formula);
@@ -177,7 +234,6 @@ export default class TestPaperOne extends Vue {
     } else {
       anwser[6] = "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)";
     }
-    console.log(a, b);
 
     const formula = {
       number1: a.number1,
@@ -198,17 +254,18 @@ export default class TestPaperOne extends Vue {
    */
   subjectOne() {
     let _return = "";
-    const typeIndex: number = this.$utils.random(0, 2);
-    switch (this.type[typeIndex]) {
-      case "+":
+    if ((this.multipleValue === 1 && this.isMultipleSubject()) || this.multipleValue === 2) {
+      _return = this.mixedComputing().anwser.join("");
+    } else if (this.ttypeValue.length === 1) {
+      if (this.ttypeValue.find(item => item === "+")) {
         _return = this.addition().anwser.join("");
-        break;
-      case "-":
+      } else {
         _return = this.subtraction().anwser.join("");
-        break;
-      case "+-":
-        _return = this.mixedComputing().anwser.join("");
-        break;
+      }
+    } else if (this.isAdditionSubject()) {
+      _return = this.addition().anwser.join("");
+    } else {
+      _return = this.subtraction().anwser.join("");
     }
     return _return;
   }
@@ -218,22 +275,23 @@ export default class TestPaperOne extends Vue {
    */
   subjectTwo() {
     let _return = "";
-    let typeIndex: number;
     for (let i = 0; i < 2; i++) {
-      typeIndex = this.$utils.random(0, 2);
       if (_return) {
         _return += "&nbsp;<span class='iconfont icon-yuanquanweixuanfuben'></span>&nbsp;";
       }
-      switch (this.type[typeIndex]) {
-        case "+":
+
+      if ((this.multipleValue === 1 && this.isMultipleSubject()) || this.multipleValue === 2) {
+        _return += this.mixedComputing().formula.join("");
+      } else if (this.ttypeValue.length === 1) {
+        if (this.ttypeValue.find(item => item === "+")) {
           _return += this.addition().formula.join("");
-          break;
-        case "-":
+        } else {
           _return += this.subtraction().formula.join("");
-          break;
-        case "+-":
-          _return += this.mixedComputing().formula.join("");
-          break;
+        }
+      } else if (this.isAdditionSubject()) {
+        _return += this.addition().formula.join("");
+      } else {
+        _return += this.subtraction().formula.join("");
       }
     }
 
@@ -242,25 +300,59 @@ export default class TestPaperOne extends Vue {
   /**
    * 生成算式
    */
-  generate() {
-    let n: number;
-    let log: any;
-
-    for (let j = 0; j < 100; j++) {
-      log = {};
-      for (let i = 0; i < 100; i++) {
-        n = this.$utils.random(0, 2);
-
-        log[n] = log[n] ? log[n] + 1 : 1;
-      }
-      console.log(log);
+  createSubject() {
+    this.subjectList = [];
+    for (let i = 0; i < 106; i++) {
+      this.subjectList.push(this.subjectOne());
     }
+
+    for (let i = 0; i < 13; i++) {
+      this.subjectList.push(this.subjectTwo());
+    }
+  }
+
+  /**
+   * 随机一个数，小于5生成加法题目，反之减法题目
+   */
+  isAdditionSubject() {
+    const _return = this.$utils.random(0, 9);
+    return _return < 5;
+  }
+
+  /**
+   * 随机一个数，判断是否生成连加连减题目
+   */
+  isMultipleSubject() {
+    const _return = this.$utils.random(0, 2);
+    return _return === 2;
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .test-paper-one {
+  display: flex;
+  .select-one {
+    width: 100%;
+  }
+  .left {
+    margin-right: 16px;
+    padding: 8px;
+    margin-top: 16px;
+    border: 1px solid #666666;
+    width: 230px;
+
+    .btn-div {
+      text-align: center;
+    }
+
+    & > div {
+      margin-bottom: 16px;
+    }
+  }
+  .right {
+    flex: 1;
+  }
   .header {
     margin-bottom: 8px;
     .title-1 {
@@ -304,7 +396,7 @@ export default class TestPaperOne extends Vue {
       align-items: center;
       // justify-content: center;
       padding-left: 6px;
-      height: 39px;
+      height: 37px;
       border-bottom: 1px solid #333333;
       border-right: 1px solid #333333;
       &:last-child {
@@ -319,11 +411,15 @@ export default class TestPaperOne extends Vue {
 
 @media print {
   .test-paper-one {
-    font-size: 17px;
+    font-size: 16px;
+
+    .left {
+      display: none;
+    }
 
     .header {
       .title-1 {
-        // padding-top: 0;
+        padding-top: 0;
       }
     }
   }
