@@ -1,0 +1,16 @@
+{
+  "id": "2184658",
+  "name": "coco",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "625944",
+      "name": "15-圆圈未选 - 副本",
+      "font_class": "yuanquanweixuanfuben",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    }
+  ]
+}
